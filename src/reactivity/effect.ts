@@ -2,9 +2,10 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-10 13:20:47
- * @LastEditTime: 2022-06-13 13:18:48
+ * @LastEditTime: 2022-06-14 13:27:10
  * @LastEditors: wsy
  */
+import { extend } from '../shared/index';
 let activeEffect: ReactiveEffect;
 const targetMap = new Map();
 
@@ -12,6 +13,7 @@ class ReactiveEffect {
   public _fn!: () => any;
   public deps: any[] = [];
   public active: Boolean = true;
+  public onStop?: () => void;
   constructor(fn: () => any, public scheduler?: any) {
     this._fn = fn;
   }
@@ -22,6 +24,9 @@ class ReactiveEffect {
   stop() {
     if (this.active) {
       cleanupEffect(this);
+      if (this.onStop) {
+        this.onStop();
+      }
       this.active = false;
     }
   }
@@ -63,6 +68,7 @@ export function trigger(target: Record<string, any>, key: string | symbol) {
 export function effect(fn: () => any, options: any = {}): any {
   const scheduler = options.scheduler;
   const _effect = new ReactiveEffect(fn, scheduler);
+  extend(_effect, options);
   _effect.run();
   const runner: any = _effect.run.bind(_effect);
   runner.effect = _effect;
