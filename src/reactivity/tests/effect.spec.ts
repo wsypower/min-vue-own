@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-10 10:23:41
- * @LastEditTime: 2022-06-13 13:24:14
+ * @LastEditTime: 2022-06-14 13:05:09
  * @LastEditors: wsy
  */
 
@@ -82,7 +82,7 @@ describe('effect', () => {
       },
       { onStop }
     );
+    stop(runner);
+    expect(onStop).toHaveBeenCalledTimes(1);
   });
-  stop(runner);
-  expect(onStop).toHaveBeenCalledTimes(1);
 });
