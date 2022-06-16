@@ -1,10 +1,11 @@
+import { isObject } from '../shared';
 import { track, trigger } from './effect';
-import { ReactiveFlags } from './reactive';
+import { reactive, ReactiveFlags, readonly } from './reactive';
 /*
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-16 21:07:42
- * @LastEditTime: 2022-06-16 21:44:12
+ * @LastEditTime: 2022-06-16 22:34:17
  * @LastEditors: wsy
  */
 
@@ -14,12 +15,15 @@ const readonlyGet = createGetter(true);
 
 function createGetter(isReadonly: boolean = false): any {
   return function get(target: Record<string, any>, key: string) {
-    const res = Reflect.get(target, key);
     if (key === ReactiveFlags.IS_REACTIVE) {
       return !isReadonly;
     }
     if (key === ReactiveFlags.IS_READONLY) {
       return isReadonly;
+    }
+    const res = Reflect.get(target, key);
+    if (isObject(res)) {
+      return isReadonly ? readonly(res) : reactive(res);
     }
     if (!isReadonly) {
       track(target, key);

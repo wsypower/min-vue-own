@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-10 13:20:47
- * @LastEditTime: 2022-06-16 22:15:05
+ * @LastEditTime: 2022-06-16 22:24:43
  * @LastEditors: wsy
  */
 import { extend } from '../shared/index';
@@ -46,6 +46,8 @@ function cleanupEffect(effect: ReactiveEffect) {
 
 export function track(target: Record<string, any>, key: string | symbol) {
   // targetMap => target => key => ReactiveEffect
+  if (!isTracking()) return;
+
   let depMap = targetMap.get(target);
   if (!depMap) {
     depMap = new Map();
@@ -56,10 +58,12 @@ export function track(target: Record<string, any>, key: string | symbol) {
     dep = new Set();
     depMap.set(key, dep);
   }
-  if (!activeEffect) return;
-  if (!shouldTrack) return;
   dep.add(activeEffect);
   activeEffect.deps.push(dep);
+}
+
+function isTracking() {
+  return shouldTrack && activeEffect !== undefined;
 }
 
 export function trigger(target: Record<string, any>, key: string | symbol) {
@@ -87,3 +91,7 @@ export function effect(fn: () => any, options: any = {}): any {
 export function stop(runner: any) {
   runner.effect.stop();
 }
+
+const a = { 1: 'a' };
+
+const s = new Set();
