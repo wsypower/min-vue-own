@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-10 13:20:47
- * @LastEditTime: 2022-06-16 22:10:52
+ * @LastEditTime: 2022-06-16 22:15:05
  * @LastEditors: wsy
  */
 import { extend } from '../shared/index';
@@ -41,6 +41,7 @@ function cleanupEffect(effect: ReactiveEffect) {
   effect.deps.forEach((dep: any) => {
     dep.delete(effect);
   });
+  effect.deps.length = 0;
 }
 
 export function track(target: Record<string, any>, key: string | symbol) {
@@ -56,6 +57,7 @@ export function track(target: Record<string, any>, key: string | symbol) {
     depMap.set(key, dep);
   }
   if (!activeEffect) return;
+  if (!shouldTrack) return;
   dep.add(activeEffect);
   activeEffect.deps.push(dep);
 }
