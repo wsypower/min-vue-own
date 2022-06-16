@@ -2,13 +2,13 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-10 13:20:47
- * @LastEditTime: 2022-06-14 13:27:10
+ * @LastEditTime: 2022-06-16 22:10:52
  * @LastEditors: wsy
  */
 import { extend } from '../shared/index';
 let activeEffect: ReactiveEffect;
 const targetMap = new Map();
-
+let shouldTrack = false;
 class ReactiveEffect {
   public _fn!: () => any;
   public deps: any[] = [];
@@ -18,8 +18,14 @@ class ReactiveEffect {
     this._fn = fn;
   }
   run() {
+    if (!this.active) {
+      return this._fn();
+    }
+    shouldTrack = true;
     activeEffect = this;
-    return this._fn();
+    const ret = this._fn();
+    shouldTrack = false;
+    return ret;
   }
   stop() {
     if (this.active) {
@@ -49,6 +55,7 @@ export function track(target: Record<string, any>, key: string | symbol) {
     dep = new Set();
     depMap.set(key, dep);
   }
+  if (!activeEffect) return;
   dep.add(activeEffect);
   activeEffect.deps.push(dep);
 }
