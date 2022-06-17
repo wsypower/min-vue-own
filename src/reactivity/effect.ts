@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-10 13:20:47
- * @LastEditTime: 2022-06-16 22:24:43
+ * @LastEditTime: 2022-06-17 10:23:00
  * @LastEditors: wsy
  */
 import { extend } from '../shared/index';
@@ -14,7 +14,8 @@ class ReactiveEffect {
   public deps: any[] = [];
   public active: Boolean = true;
   public onStop?: () => void;
-  constructor(fn: () => any, public scheduler?: any) {
+  public schedule?: () => void;
+  constructor(fn: () => any) {
     this._fn = fn;
   }
   run() {
@@ -79,8 +80,7 @@ export function trigger(target: Record<string, any>, key: string | symbol) {
 }
 
 export function effect(fn: () => any, options: any = {}): any {
-  const scheduler = options.scheduler;
-  const _effect = new ReactiveEffect(fn, scheduler);
+  const _effect = new ReactiveEffect(fn);
   extend(_effect, options);
   _effect.run();
   const runner: any = _effect.run.bind(_effect);

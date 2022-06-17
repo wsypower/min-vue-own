@@ -4,7 +4,7 @@ import { isReadonly, readonly, reactive, isReactive } from '../reactive';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-16 20:55:27
- * @LastEditTime: 2022-06-16 22:32:32
+ * @LastEditTime: 2022-06-17 11:28:03
  * @LastEditors: wsy
  */
 describe('readonly', () => {
@@ -18,9 +18,13 @@ describe('readonly', () => {
     console.warn = jest.fn();
     const user = readonly({
       age: 10,
+      a: {
+        foo: 1,
+      },
     });
     user.age = 11;
-    expect(console.warn).toBeCalled();
+    user.a.foo = 11;
+    expect(console.warn).toHaveBeenCalledTimes(2);
   });
   it('isReadonly', () => {
     const original = { foo: 1 };
