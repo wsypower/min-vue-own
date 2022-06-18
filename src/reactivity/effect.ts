@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-10 13:20:47
- * @LastEditTime: 2022-06-18 21:49:57
+ * @LastEditTime: 2022-06-19 03:47:36
  * @LastEditors: wsy
  */
 import { extend } from '../shared/index';
@@ -15,8 +15,9 @@ export class ReactiveEffect {
   public active: Boolean = true;
   public onStop?: () => void;
   public scheduler?: () => void;
-  constructor(fn: () => any) {
+  constructor(fn: () => any, scheduler?: () => void) {
     this._fn = fn;
+    this.scheduler = scheduler;
   }
   run() {
     if (!this.active) {
