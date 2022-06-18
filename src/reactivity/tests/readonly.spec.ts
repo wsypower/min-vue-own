@@ -1,10 +1,10 @@
-import { isReadonly, readonly, reactive, isReactive } from '../reactive';
+import { isReadonly, readonly, isProxy } from '../reactive';
 
 /*
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-16 20:55:27
- * @LastEditTime: 2022-06-17 11:28:03
+ * @LastEditTime: 2022-06-18 21:13:41
  * @LastEditors: wsy
  */
 describe('readonly', () => {
@@ -39,5 +39,14 @@ describe('readonly', () => {
     expect(isReadonly(observed.nested)).toBe(true);
     expect(isReadonly(observed.array)).toBe(true);
     expect(isReadonly(observed.array[0])).toBe(true);
+  });
+  it('is Proxy', () => {
+    const original = {
+      nested: { foo: 1 },
+      array: [{ bar: 1 }],
+      obj: { foo: 1 },
+    };
+    const observed = readonly(original);
+    expect(isProxy(observed)).toBeTruthy();
   });
 });

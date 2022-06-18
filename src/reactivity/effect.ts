@@ -2,19 +2,19 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-10 13:20:47
- * @LastEditTime: 2022-06-17 10:23:00
+ * @LastEditTime: 2022-06-18 21:49:57
  * @LastEditors: wsy
  */
 import { extend } from '../shared/index';
 let activeEffect: ReactiveEffect;
 const targetMap = new Map();
 let shouldTrack = false;
-class ReactiveEffect {
+export class ReactiveEffect {
   public _fn!: () => any;
   public deps: any[] = [];
   public active: Boolean = true;
   public onStop?: () => void;
-  public schedule?: () => void;
+  public scheduler?: () => void;
   constructor(fn: () => any) {
     this._fn = fn;
   }
@@ -59,17 +59,28 @@ export function track(target: Record<string, any>, key: string | symbol) {
     dep = new Set();
     depMap.set(key, dep);
   }
+  trackEffects(dep);
+}
+
+export function trackEffects(dep: Set<ReactiveEffect>) {
+  if (dep.has(activeEffect)) {
+    return;
+  }
   dep.add(activeEffect);
   activeEffect.deps.push(dep);
 }
 
-function isTracking() {
+export function isTracking() {
   return shouldTrack && activeEffect !== undefined;
 }
 
 export function trigger(target: Record<string, any>, key: string | symbol) {
   const depMap = targetMap.get(target);
   const dep = depMap.get(key);
+  triggerEffects(dep);
+}
+
+export function triggerEffects(dep: Set<ReactiveEffect>) {
   for (const effect of dep) {
     if (effect.scheduler) {
       effect.scheduler();

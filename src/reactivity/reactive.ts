@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-10 12:48:59
- * @LastEditTime: 2022-06-17 10:46:27
+ * @LastEditTime: 2022-06-18 21:15:18
  * @LastEditors: wsy
  */
 
@@ -37,6 +37,9 @@ export function shallowReadonly(raw: Record<string, any>) {
   return createActiveObject(raw, shallowReadonlyHandles);
 }
 
+export function isProxy(raw: Record<string, any>) {
+  return isReactive(raw) || isReadonly(raw);
+}
 function createActiveObject(raw: any, basieHandles: any) {
   return new Proxy(raw, basieHandles);
 }
