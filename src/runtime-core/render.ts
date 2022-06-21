@@ -5,7 +5,7 @@ import { isObject } from '../shared/index';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-06-20 00:26:05
+ * @LastEditTime: 2022-06-21 23:29:36
  * @LastEditors: wsy
  */
 export function render(vnode: any, container: Element) {
@@ -32,7 +32,10 @@ function mountComponent(vnode: any, container: any) {
 }
 
 function setupRenderEffect(instance: any, container: any) {
-  const subTree = instance.render();
+  console.log(instance);
+  const { proxy } = instance;
+  const subTree = instance.render.call(proxy);
+  console.log(subTree);
   patch(subTree, container);
 }
 
