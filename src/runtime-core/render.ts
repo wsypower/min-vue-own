@@ -5,7 +5,7 @@ import { isObject } from '../shared/index';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-06-21 23:29:36
+ * @LastEditTime: 2022-06-22 00:33:27
  * @LastEditors: wsy
  */
 export function render(vnode: any, container: Element) {
@@ -25,25 +25,25 @@ function processComponent(vnode: any, container: any) {
   mountComponent(vnode, container);
 }
 
-function mountComponent(vnode: any, container: any) {
-  const instance = createComponentInstance(vnode);
+function mountComponent(initialVnode: any, container: any) {
+  const instance = createComponentInstance(initialVnode);
   setupComponent(instance);
-  setupRenderEffect(instance, container);
+  setupRenderEffect(instance, initialVnode, container);
 }
 
-function setupRenderEffect(instance: any, container: any) {
+function setupRenderEffect(instance: any, initialVnode: any, container: any) {
   console.log(instance);
   const { proxy } = instance;
   const subTree = instance.render.call(proxy);
-  console.log(subTree);
   patch(subTree, container);
+  initialVnode.el = subTree.el;
 }
 
 function processElement(vnode: any, container: Element) {
   mountElement(vnode, container);
 }
 function mountElement(vnode: any, container: Element) {
-  const element = document.createElement(vnode.type);
+  const element = (vnode.el = document.createElement(vnode.type));
   const { children } = vnode;
   if (Array.isArray(children)) {
     mountChildren(vnode, element);
