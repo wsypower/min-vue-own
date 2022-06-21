@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:19:56
- * @LastEditTime: 2022-06-19 18:32:27
+ * @LastEditTime: 2022-06-19 22:39:57
  * @LastEditors: wsy
  */
 export function createComponentInstance(vnode: any) {
@@ -38,7 +38,5 @@ function handleSetupResult(instance: any, setupResult: any) {
 
 function finishComponentSetup(instance: any) {
   const Component = instance.type;
-  if (Component.render) {
-    instance.render = Component.render;
-  }
+  instance.render = Component.render;
 }

@@ -1,11 +1,12 @@
 {
   "name": "min-vue-own",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
+  "main": "lib/guide-mini-vue.cjs.js",
+  "module": "lib/guide-mini-vue.esm.js",
   "scripts": {
     "test": "jest",
-    "build": "rollup -c ./rollup.config.js"
+    "build": "rollup -c ./rollup.config.js --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
