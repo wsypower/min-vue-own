@@ -6,7 +6,7 @@ import { ShapeFlags } from '../shared/ShapeFlags';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-06-24 22:36:28
+ * @LastEditTime: 2022-06-24 23:22:40
  * @LastEditors: wsy
  */
 export function render(vnode: any, container: Element) {
@@ -14,11 +14,11 @@ export function render(vnode: any, container: Element) {
 }
 
 function patch(vnode: any, container: Element) {
-  const { shapeFlags } = vnode;
+  const { shapeFlag } = vnode;
   // TODO vnode 是否是一个element
-  if (shapeFlags & ShapeFlags.ELEMENT) {
+  if (shapeFlag & ShapeFlags.ELEMENT) {
     processElement(vnode, container);
-  } else if (shapeFlags & ShapeFlags.STATEFUL_COMPONENT) {
+  } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
     processComponent(vnode, container);
   }
 }
@@ -46,11 +46,11 @@ function processElement(vnode: any, container: Element) {
 }
 function mountElement(vnode: any, container: Element) {
   const element = (vnode.el = document.createElement(vnode.type));
-  const { children, shapeFlags } = vnode;
-  if (shapeFlags & ShapeFlags.ARRAY_CHILDREN) {
+  const { children, shapeFlag } = vnode;
+  if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
     // array_children
     mountChildren(vnode, element);
-  } else if (shapeFlags & ShapeFlags.TEXT_CHILDREN) {
+  } else if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
     // text_children
     element.textContent = children;
   }
