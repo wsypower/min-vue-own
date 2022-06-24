@@ -6,7 +6,7 @@ import { ShapeFlags } from '../shared/ShapeFlags';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-06-24 23:22:40
+ * @LastEditTime: 2022-06-24 23:24:15
  * @LastEditors: wsy
  */
 export function render(vnode: any, container: Element) {
@@ -34,7 +34,6 @@ function mountComponent(initialVnode: any, container: any) {
 }
 
 function setupRenderEffect(instance: any, initialVnode: any, container: any) {
-  console.log(instance);
   const { proxy } = instance;
   const subTree = instance.render.call(proxy);
   patch(subTree, container);
