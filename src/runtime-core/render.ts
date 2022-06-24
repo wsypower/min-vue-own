@@ -6,7 +6,7 @@ import { ShapeFlags } from '../shared/ShapeFlags';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-06-24 20:43:02
+ * @LastEditTime: 2022-06-24 22:36:28
  * @LastEditors: wsy
  */
 export function render(vnode: any, container: Element) {
@@ -58,6 +58,11 @@ function mountElement(vnode: any, container: Element) {
   if (vnode.props) {
     for (const key in vnode.props) {
       const val = vnode.props[key];
+      const isOn = (key: string) => /^on[A-Z]/.test(key);
+      if (isOn(key)) {
+        const event = key.slice(2).toLowerCase();
+        element.addEventListener(event, val);
+      }
       element.setAttribute(key, val);
     }
   }
