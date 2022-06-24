@@ -1,8 +1,9 @@
+import { isObject } from '../shared/index';
 /*
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-10 12:48:59
- * @LastEditTime: 2022-06-18 21:15:18
+ * @LastEditTime: 2022-06-24 23:45:26
  * @LastEditors: wsy
  */
 
@@ -41,5 +42,9 @@ export function isProxy(raw: Record<string, any>) {
   return isReactive(raw) || isReadonly(raw);
 }
 function createActiveObject(raw: any, basieHandles: any) {
+  if (!isObject(raw)) {
+    console.warn('target must be Object');
+    return;
+  }
   return new Proxy(raw, basieHandles);
 }
