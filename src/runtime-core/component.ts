@@ -2,11 +2,12 @@ import { initProps } from './componentProps';
 import { PublicInstanceProxyHandlers } from './componentPublicInstance';
 import { shallowReadonly } from '../reactivity/reactive';
 import { emit } from './componentEmit';
+import { initSlots } from './componentSlots';
 /*
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:19:56
- * @LastEditTime: 2022-06-25 14:41:48
+ * @LastEditTime: 2022-06-25 17:19:24
  * @LastEditors: wsy
  */
 export function createComponentInstance(vnode: any) {
@@ -16,6 +17,7 @@ export function createComponentInstance(vnode: any) {
     setupState: {},
     el: null,
     emit: () => {},
+    slots: {},
   };
   component.emit = emit.bind(null, component) as any;
   return component;
@@ -23,7 +25,7 @@ export function createComponentInstance(vnode: any) {
 
 export function setupComponent(instance: any) {
   initProps(instance, instance.vnode.props);
-  // initSlots()
+  initSlots(instance, instance.vnode.children);
   setupStatefulComponent(instance);
 }
 

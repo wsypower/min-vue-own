@@ -3,7 +3,7 @@ import { ShapeFlags } from '../shared/ShapeFlags';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 16:41:46
- * @LastEditTime: 2022-06-24 20:44:34
+ * @LastEditTime: 2022-06-25 19:36:31
  * @LastEditors: wsy
  */
 export function createVNode(
@@ -22,6 +22,12 @@ export function createVNode(
     vnode.shapeFlag |= ShapeFlags.TEXT_CHILDREN;
   } else if (Array.isArray(children)) {
     vnode.shapeFlag |= ShapeFlags.ARRAY_CHILDREN;
+  }
+
+  if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+    if (typeof children === 'object') {
+      vnode.shapeFlag |= ShapeFlags.SLOTS_CHILDREN;
+    }
   }
   return vnode;
 }
