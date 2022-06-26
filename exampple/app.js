@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 16:33:38
- * @LastEditTime: 2022-06-25 19:32:53
+ * @LastEditTime: 2022-06-25 21:17:20
  * @LastEditors: wsy
  */
 import { h } from '../lib/guide-mini-vue.esm.js';
@@ -25,6 +25,7 @@ const App = {
             count: 1,
             onAddFoo() {
               console.log('这是收到了add');
+              console.log(this);
             },
           },
           {

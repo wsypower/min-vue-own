@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-25 14:30:52
- * @LastEditTime: 2022-06-25 15:10:11
+ * @LastEditTime: 2022-06-25 21:20:31
  * @LastEditors: wsy
  */
 export function emit(instance: any, event: any, ...arg: any[]) {

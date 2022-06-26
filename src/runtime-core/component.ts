@@ -7,9 +7,11 @@ import { initSlots } from './componentSlots';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:19:56
- * @LastEditTime: 2022-06-25 17:19:24
+ * @LastEditTime: 2022-06-27 01:55:19
  * @LastEditors: wsy
  */
+
+let currentInstance: any = null;
 export function createComponentInstance(vnode: any) {
   const component = {
     vnode,
@@ -35,10 +37,12 @@ function setupStatefulComponent(instance: any) {
 
   instance.proxy = new Proxy({ _: instance }, PublicInstanceProxyHandlers);
   if (setup) {
+    currentInstance = instance;
     // function Object
     const setupResult = setup(shallowReadonly(instance.props), {
       emit: instance.emit,
     });
+    currentInstance = null;
     handleSetupResult(instance, setupResult);
   }
 }
@@ -52,4 +56,8 @@ function handleSetupResult(instance: any, setupResult: any) {
 function finishComponentSetup(instance: any) {
   const Component = instance.type;
   instance.render = Component.render;
+}
+
+export function getCurrentInstance() {
+  return currentInstance;
 }
