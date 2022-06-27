@@ -2,10 +2,10 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 16:33:38
- * @LastEditTime: 2022-06-25 21:17:20
+ * @LastEditTime: 2022-06-27 11:03:52
  * @LastEditors: wsy
  */
-import { h } from '../lib/guide-mini-vue.esm.js';
+import { h } from '../../lib/guide-mini-vue.esm.js';
 import { Foo } from './foo.js';
 const App = {
   render() {

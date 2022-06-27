@@ -10,7 +10,7 @@ import {
   renderSlots,
   createTextVNode,
   getCurrentInstance,
-} from '../lib/guide-mini-vue.esm.js';
+} from '../../lib/guide-mini-vue.esm.js';
 export const Foo = {
   name: 'foo',
   setup(props, { emit }) {
