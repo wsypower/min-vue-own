@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-27 11:04:49
- * @LastEditTime: 2022-06-27 22:02:36
+ * @LastEditTime: 2022-06-27 22:18:35
  * @LastEditors: wsy
  */
 // 组件 provide 和 inject 功能
@@ -53,7 +53,7 @@ const Consumer = {
     // const baz = inject('baz');
   },
   render() {
-    return h('div', {}, `Consumer-${this.foo}-${this.bar}-${baz}`);
+    return h('div', {}, `Consumer-${this.foo}-${this.bar}-${this.baz}`);
   },
 };
 

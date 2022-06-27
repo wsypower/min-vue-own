@@ -7,11 +7,11 @@ import { Fragment, Text } from './vnode';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-06-27 14:16:21
+ * @LastEditTime: 2022-06-27 22:17:50
  * @LastEditors: wsy
  */
-export function render(vnode: any, container: Element, parentComponent: any) {
-  patch(vnode, container, parentComponent);
+export function render(vnode: any, container: Element) {
+  patch(vnode, container, null);
 }
 
 function patch(vnode: any, container: Element, parentComponent: any) {
