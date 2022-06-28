@@ -2,8 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 20:22:42
- * @LastEditTime: 2022-06-19 21:16:32
+ * @LastEditTime: 2022-06-28 21:51:28
  * @LastEditors: wsy
  */
-export * from './runtime-core';
- 
+export * from './runtime-dom/index';
