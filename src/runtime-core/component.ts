@@ -8,7 +8,7 @@ import { proxyRefs } from '../reactivity/ref';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:19:56
- * @LastEditTime: 2022-06-29 19:17:48
+ * @LastEditTime: 2022-06-30 01:48:28
  * @LastEditors: wsy
  */
 
@@ -22,6 +22,8 @@ export function createComponentInstance(vnode: any, parent: any) {
     slots: {},
     provides: parent ? parent.provides : {},
     parent,
+    isMounted: false,
+    subTree: null,
   };
   component.emit = emit.bind(null, component) as any;
   return component;

@@ -2,10 +2,12 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-28 21:38:02
- * @LastEditTime: 2022-06-29 19:14:56
+ * @LastEditTime: 2022-06-30 01:43:15
  * @LastEditors: wsy
  */
-import { createRenderer } from '../runtime-core/index';
+import { createRenderer } from '../runtime-core';
+export * from '../runtime-core';
+
 function createElement(type: any) {
   return document.createElement(type);
 }
@@ -31,5 +33,3 @@ const renderer: any = createRenderer({
 export function createApp(...args: any[]) {
   return renderer.createApp(...args);
 }
-
-export * from '../runtime-core';
