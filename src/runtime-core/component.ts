@@ -3,11 +3,12 @@ import { PublicInstanceProxyHandlers } from './componentPublicInstance';
 import { shallowReadonly } from '../reactivity/reactive';
 import { emit } from './componentEmit';
 import { initSlots } from './componentSlots';
+import { proxyRefs } from '../reactivity/ref';
 /*
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:19:56
- * @LastEditTime: 2022-06-27 15:35:33
+ * @LastEditTime: 2022-06-29 19:17:48
  * @LastEditors: wsy
  */
 
@@ -49,7 +50,7 @@ function setupStatefulComponent(instance: any) {
 }
 function handleSetupResult(instance: any, setupResult: any) {
   if (typeof setupResult === 'object') {
-    instance.setupState = setupResult;
+    instance.setupState = proxyRefs(setupResult);
   }
   finishComponentSetup(instance);
 }

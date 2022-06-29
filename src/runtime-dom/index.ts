@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-28 21:38:02
- * @LastEditTime: 2022-06-28 21:55:24
+ * @LastEditTime: 2022-06-29 19:14:56
  * @LastEditors: wsy
  */
 import { createRenderer } from '../runtime-core/index';
@@ -32,4 +32,4 @@ export function createApp(...args: any[]) {
   return renderer.createApp(...args);
 }
 
-export * from '../runtime-core/index';
+export * from '../runtime-core';
