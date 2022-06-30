@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-27 11:04:49
- * @LastEditTime: 2022-06-30 20:17:36
+ * @LastEditTime: 2022-06-30 20:32:29
  * @LastEditors: wsy
  */
 import { h, ref } from '../../lib/guide-mini-vue.esm.js';
@@ -37,8 +37,8 @@ export default {
       onClick,
       props,
       onChangePropsDemo1,
-      onChangePropsDemo1,
-      onChangePropsDemo1,
+      onChangePropsDemo2,
+      onChangePropsDemo3,
     };
   },
   render() {

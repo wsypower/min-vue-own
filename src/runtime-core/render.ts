@@ -1,5 +1,5 @@
 import { createComponentInstance, setupComponent } from './component';
-import { isObject } from '../shared/index';
+import { EMPTY_PBJ, isObject } from '../shared/index';
 import { ShapeFlags } from '../shared/ShapeFlags';
 import { Fragment, Text } from './vnode';
 import { createAppApi } from './createApp';
@@ -9,14 +9,14 @@ import { effect } from '../reactivity/effect';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-06-30 01:58:46
+ * @LastEditTime: 2022-06-30 20:42:57
  * @LastEditors: wsy
  */
 
 export function createRenderer(options: any) {
   const {
     createElement: hostCreateElement,
-    patchProp: hostPatchPro,
+    patchProp: hostPatchProp,
     insert: hostInsert,
   } = options;
 
@@ -100,9 +100,33 @@ export function createRenderer(options: any) {
     }
   }
   function patchElement(oldVnode: any, vnode: any, container: any) {
-    console.log('patchElement');
     //更新对比
+    console.log('patchElement');
+    const oldPros = oldVnode.props || EMPTY_PBJ;
+    const newPros = vnode.props || EMPTY_PBJ;
+    const el = (vnode.el = oldVnode.el);
+    patchProps(el, oldPros, newPros);
   }
+
+  function patchProps(el: any, oldPros: any, newPros: any) {
+    if (oldPros !== newPros) {
+      for (const key in newPros) {
+        const prevProp = oldPros[key];
+        const nextProp = newPros[key];
+        if (prevProp !== nextProp) {
+          hostPatchProp(el, key, prevProp, nextProp);
+        }
+      }
+      if (oldPros !== EMPTY_PBJ) {
+        for (const key in oldPros) {
+          if (!(key in newPros)) {
+            hostPatchProp(el, key, oldPros[key], null);
+          }
+        }
+      }
+    }
+  }
+
   function mountElement(vnode: any, container: Element, parentComponent: null) {
     const element = (vnode.el = hostCreateElement(vnode.type));
     const { children, shapeFlag } = vnode;
@@ -124,7 +148,7 @@ export function createRenderer(options: any) {
         // } else {
         //   element.setAttribute(key, val);
         // }
-        hostPatchPro(element, key, val);
+        hostPatchProp(element, key, null, val);
       }
     }
     // container.appendChild(element);
