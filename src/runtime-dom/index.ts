@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-28 21:38:02
- * @LastEditTime: 2022-06-30 20:33:43
+ * @LastEditTime: 2022-07-01 14:57:40
  * @LastEditors: wsy
  */
 import { createRenderer } from '../runtime-core';
@@ -28,10 +28,22 @@ function insert(el: any, parent: any) {
   parent.appendChild(el);
 }
 
+function remove(child: any) {
+  const parent = child.parentNode;
+  if (parent) {
+    parent.removeChild(child);
+  }
+}
+function setElementText(el: any, text: any) {
+  el.textContent = text;
+}
+
 const renderer: any = createRenderer({
   createElement,
   patchProp,
   insert,
+  remove,
+  setElementText,
 });
 
 export function createApp(...args: any[]) {

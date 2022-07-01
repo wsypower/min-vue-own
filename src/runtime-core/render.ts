@@ -9,7 +9,7 @@ import { effect } from '../reactivity/effect';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-07-01 12:43:24
+ * @LastEditTime: 2022-07-01 15:23:00
  * @LastEditors: wsy
  */
 
@@ -18,6 +18,8 @@ export function createRenderer(options: any) {
     createElement: hostCreateElement,
     patchProp: hostPatchProp,
     insert: hostInsert,
+    remove: hostRemove,
+    setElementText: hostSetElementText,
   } = options;
 
   function render(vnode: any, container: Element) {
@@ -96,32 +98,58 @@ export function createRenderer(options: any) {
     if (!oldVnode) {
       mountElement(vnode, container, parentComponent);
     } else {
-      patchElement(oldVnode, vnode, container);
+      patchElement(oldVnode, vnode, container, parentComponent);
     }
   }
-  function patchElement(oldVnode: any, vnode: any, container: any) {
+  function patchElement(
+    oldVnode: any,
+    vnode: any,
+    container: any,
+    parentComponent: any
+  ) {
     //更新对比
     console.log('patchElement');
     const oldPros = oldVnode.props || EMPTY_PBJ;
     const newPros = vnode.props || EMPTY_PBJ;
     const el = (vnode.el = oldVnode.el);
-    patchChildren(oldVnode, vnode);
+    patchChildren(oldVnode, vnode, el, parentComponent);
     patchProps(el, oldPros, newPros);
   }
 
-  function patchChildren(oldVnode: any, vnode: any) {
+  function patchChildren(
+    oldVnode: any,
+    vnode: any,
+    container: any,
+    parentComponent: any
+  ) {
     // throw new Error('Function not implemented.');
     const prevShapeFlap = oldVnode.shapeFlag;
     const { shapeFlag } = vnode;
+    const vnodeChildren = vnode.children;
+    const oldVnodeChildren = oldVnode.children;
     if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
       if (prevShapeFlap & ShapeFlags.ARRAY_CHILDREN) {
         // 把老的 children 清空
+        unmountedChildren(oldVnode.children);
+      }
+      if (oldVnodeChildren !== vnodeChildren) {
         // 设置text
-        unmounteChildren(oldVnode.children);
+        hostSetElementText(container, vnodeChildren);
+      }
+    } else {
+      if (prevShapeFlap & ShapeFlags.TEXT_CHILDREN) {
+        // 把老的 text 清空
+        hostSetElementText(container, '');
+        mountChildren(vnodeChildren, container, parentComponent);
       }
     }
   }
-  function unmounteChildren() {}
+  function unmountedChildren(children: any) {
+    for (let i = 0; i < children.length; i++) {
+      const el = children[i].el;
+      hostRemove(el);
+    }
+  }
 
   function patchProps(el: any, oldPros: any, newPros: any) {
     if (oldPros !== newPros) {
@@ -147,7 +175,7 @@ export function createRenderer(options: any) {
     const { children, shapeFlag } = vnode;
     if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
       // array_children
-      mountChildren(vnode, element, parentComponent);
+      mountChildren(vnode.children, element, parentComponent);
     } else if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
       // text_children
       element.textContent = children;
@@ -169,8 +197,8 @@ export function createRenderer(options: any) {
     // container.appendChild(element);
     hostInsert(element, container);
   }
-  function mountChildren(vnode: any, element: any, parentComponent: any) {
-    vnode.children.forEach((child: any) => {
+  function mountChildren(children: any, element: any, parentComponent: any) {
+    children.forEach((child: any) => {
       patch(null, child, element, parentComponent);
     });
   }
@@ -181,7 +209,7 @@ export function createRenderer(options: any) {
     container: Element,
     parentComponent: any
   ) {
-    mountChildren(vnode, container, parentComponent);
+    mountChildren(vnode.children, container, parentComponent);
   }
   function processText(oldVnode: any, vnode: any, container: Element) {
     const { children } = vnode;
