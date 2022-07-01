@@ -9,7 +9,7 @@ import { effect } from '../reactivity/effect';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-06-30 20:42:57
+ * @LastEditTime: 2022-07-01 12:43:24
  * @LastEditors: wsy
  */
 
@@ -105,8 +105,23 @@ export function createRenderer(options: any) {
     const oldPros = oldVnode.props || EMPTY_PBJ;
     const newPros = vnode.props || EMPTY_PBJ;
     const el = (vnode.el = oldVnode.el);
+    patchChildren(oldVnode, vnode);
     patchProps(el, oldPros, newPros);
   }
+
+  function patchChildren(oldVnode: any, vnode: any) {
+    // throw new Error('Function not implemented.');
+    const prevShapeFlap = oldVnode.shapeFlag;
+    const { shapeFlag } = vnode;
+    if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
+      if (prevShapeFlap & ShapeFlags.ARRAY_CHILDREN) {
+        // 把老的 children 清空
+        // 设置text
+        unmounteChildren(oldVnode.children);
+      }
+    }
+  }
+  function unmounteChildren() {}
 
   function patchProps(el: any, oldPros: any, newPros: any) {
     if (oldPros !== newPros) {

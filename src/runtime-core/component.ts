@@ -8,7 +8,7 @@ import { proxyRefs } from '../reactivity/ref';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:19:56
- * @LastEditTime: 2022-06-30 01:48:28
+ * @LastEditTime: 2022-07-01 11:06:23
  * @LastEditors: wsy
  */
 
@@ -52,6 +52,7 @@ function setupStatefulComponent(instance: any) {
 }
 function handleSetupResult(instance: any, setupResult: any) {
   if (typeof setupResult === 'object') {
+    console.log(setupResult);
     instance.setupState = proxyRefs(setupResult);
   }
   finishComponentSetup(instance);
