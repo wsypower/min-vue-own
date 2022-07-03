@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-28 21:38:02
- * @LastEditTime: 2022-07-01 14:57:40
+ * @LastEditTime: 2022-07-02 20:07:23
  * @LastEditors: wsy
  */
 import { createRenderer } from '../runtime-core';
@@ -24,8 +24,8 @@ function patchProp(el: any, key: string, preVal: any, nextVal: any) {
     }
   }
 }
-function insert(el: any, parent: any) {
-  parent.appendChild(el);
+function insert(el: any, parent: any, anchor: any = null) {
+  parent.insertBefore(el, anchor);
 }
 
 function remove(child: any) {

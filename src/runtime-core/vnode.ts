@@ -3,7 +3,7 @@ import { ShapeFlags } from '../shared/ShapeFlags';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 16:41:46
- * @LastEditTime: 2022-06-27 12:37:13
+ * @LastEditTime: 2022-07-02 17:44:37
  * @LastEditors: wsy
  */
 
@@ -20,6 +20,7 @@ export function createVNode(
     children,
     el: null,
     shapeFlag: getShapeFlag(type),
+    key: props?.key,
   };
   if (typeof children === 'string') {
     vnode.shapeFlag |= ShapeFlags.TEXT_CHILDREN;
