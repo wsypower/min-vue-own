@@ -9,7 +9,7 @@ import { effect } from '../reactivity/effect';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-07-04 01:17:27
+ * @LastEditTime: 2022-07-04 10:26:50
  * @LastEditors: wsy
  */
 
@@ -130,12 +130,13 @@ export function createRenderer(options: any) {
      * 1. 如果新节点是文本节点，旧节点是文本节点，则更新文本节点
      * 2. 如果新节点是文本节点，旧节点是数组节点，移除数组节点，添加文本节点
      * 3. 如果新节点是数组节点，旧节点是文本节点，移除文本节点，添加数组节点
+     * 4. 如果新节点是数组节点, 旧节点是文本节点, diff算法
      */
     const prevShapeFlap = oldVnode.shapeFlag;
     const { shapeFlag } = vnode;
     const vnodeChildren = vnode.children;
     const oldVnodeChildren = oldVnode.children;
-    // 如果旧的节点是文本节点
+    // 如果新的节点是文本节点
     if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
       if (prevShapeFlap & ShapeFlags.ARRAY_CHILDREN) {
         // 把老的 children 清空
@@ -335,7 +336,7 @@ export function createRenderer(options: any) {
   function mountElement(
     vnode: any,
     container: Element,
-    parentComponent: null,
+    parentComponent: any,
     anchor: any = null
   ) {
     const element = (vnode.el = hostCreateElement(vnode.type));
