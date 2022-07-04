@@ -9,7 +9,7 @@ import { effect } from '../reactivity/effect';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-07-04 10:26:50
+ * @LastEditTime: 2022-07-04 21:22:48
  * @LastEditors: wsy
  */
 
@@ -247,6 +247,7 @@ export function createRenderer(options: any) {
       }
       for (let i = s1; i <= e1; i++) {
         const preChild = c1[i];
+        // 所有的新节点都已经对比过了，后续的就直接删除掉 
         if (patched >= toBePatch) {
           hostRemove(preChild.el);
           continue;
@@ -302,9 +303,9 @@ export function createRenderer(options: any) {
           } else {
             console.log('等于最长递增子序列索引，不需要移动位置');
             j--;
-          }
+          } 
         }
-      }
+      }  
     }
   }
   function unmountedChildren(children: any) {
