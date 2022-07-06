@@ -4,14 +4,14 @@ import { getCurrentInstance } from './component';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-27 12:27:20
- * @LastEditTime: 2022-06-27 22:16:04
+ * @LastEditTime: 2022-07-06 11:03:37
  * @LastEditors: wsy
  */
 export function provide(key: any, value: any) {
   const currentInstance = getCurrentInstance();
   if (currentInstance) {
     let { provides } = currentInstance;
-    const parentProvides = currentInstance.parent.provides;
+    const parentProvides = currentInstance.parent?.provides;
     if (provides === parentProvides) {
       provides = currentInstance.provides = Object.create(parentProvides);
     }

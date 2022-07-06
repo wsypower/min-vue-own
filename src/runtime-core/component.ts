@@ -8,7 +8,7 @@ import { proxyRefs } from '../reactivity/ref';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:19:56
- * @LastEditTime: 2022-07-01 11:06:23
+ * @LastEditTime: 2022-07-06 10:36:49
  * @LastEditors: wsy
  */
 
@@ -16,6 +16,7 @@ export function createComponentInstance(vnode: any, parent: any) {
   const component = {
     vnode,
     type: vnode.type,
+    next: null,
     setupState: {},
     el: null,
     emit: () => {},

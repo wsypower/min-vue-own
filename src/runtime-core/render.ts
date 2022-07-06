@@ -4,12 +4,13 @@ import { ShapeFlags } from '../shared/ShapeFlags';
 import { Fragment, Text } from './vnode';
 import { createAppApi } from './createApp';
 import { effect } from '../reactivity/effect';
+import { shouldUpdateComponent } from './componentUpdateUtils';
 
 /*
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-07-04 21:22:48
+ * @LastEditTime: 2022-07-06 11:11:38
  * @LastEditors: wsy
  */
 
@@ -45,7 +46,7 @@ export function createRenderer(options: any) {
         if (shapeFlag & ShapeFlags.ELEMENT) {
           processElement(oldVnode, vnode, container, parentComponent, anchor);
         } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
-          processComponent(oldVnode, vnode, container, parentComponent);
+          processComponent(oldVnode, vnode, container, parentComponent, anchor);
         }
         break;
     }
@@ -55,41 +56,82 @@ export function createRenderer(options: any) {
     oldVnode: any,
     vnode: any,
     container: any,
-    parentComponent: any
+    parentComponent: any,
+    anchor: any
   ) {
-    mountComponent(vnode, container, parentComponent);
+    if (!oldVnode) {
+      mountComponent(vnode, container, parentComponent, anchor);
+    } else {
+      updateComponent(oldVnode, vnode, container, parentComponent, anchor);
+    }
+  }
+  function updateComponent(
+    oldVnode: any,
+    vnode: any,
+    container: any,
+    parentComponent: any,
+    anchor: any
+  ) {
+    const instance = (vnode.component = oldVnode.component);
+    if (shouldUpdateComponent(oldVnode, vnode)) {
+      console.log('-------------组件的更新----------------');
+      instance.next = vnode;
+      instance.update();
+    } else {
+      console.log('-----------组件不应该更新-------------');
+      vnode.el = oldVnode.el;
+      instance.vnode = vnode;
+    }
   }
 
   function mountComponent(
     initialVnode: any,
     container: any,
-    parentComponent: any
+    parentComponent: any,
+    anchor: any
   ) {
-    const instance = createComponentInstance(initialVnode, parentComponent);
+    const instance = (initialVnode.component = createComponentInstance(
+      initialVnode,
+      parentComponent
+    ));
     setupComponent(instance);
-    setupRenderEffect(instance, initialVnode, container);
+    setupRenderEffect(instance, initialVnode, container, anchor);
   }
 
-  function setupRenderEffect(instance: any, initialVnode: any, container: any) {
-    effect(() => {
+  function setupRenderEffect(
+    instance: any,
+    initialVnode: any,
+    container: any,
+    anchor: any
+  ) {
+    instance.update = effect(() => {
       if (!instance.isMounted) {
         console.log('init');
         const { proxy } = instance;
         const subTree = (instance.subTree = instance.render.call(proxy));
-        patch(null, subTree, container, instance);
+        patch(null, subTree, container, instance, anchor);
         initialVnode.el = subTree.el;
         instance.isMounted = true;
       } else {
         console.log('update');
+        const { next, vnode } = instance;
+        if (next) {
+          next.el = vnode.el;
+          updateComponentPreRender(instance, next);
+        }
         const { proxy } = instance;
         const subTree = instance.render.call(proxy);
         const preSubTree = instance.subTree;
         instance.subTree = subTree;
-        patch(preSubTree, subTree, container, instance);
+        patch(preSubTree, subTree, container, instance, anchor);
       }
     });
   }
-
+  function updateComponentPreRender(instance: any, nextVnode: any) {
+    instance.vnode = nextVnode;
+    instance.next = null;
+    instance.props = nextVnode.props;
+  }
   function processElement(
     oldVnode: any,
     vnode: any,
@@ -247,7 +289,7 @@ export function createRenderer(options: any) {
       }
       for (let i = s1; i <= e1; i++) {
         const preChild = c1[i];
-        // 所有的新节点都已经对比过了，后续的就直接删除掉 
+        // 所有的新节点都已经对比过了，后续的就直接删除掉
         if (patched >= toBePatch) {
           hostRemove(preChild.el);
           continue;
@@ -303,9 +345,9 @@ export function createRenderer(options: any) {
           } else {
             console.log('等于最长递增子序列索引，不需要移动位置');
             j--;
-          } 
+          }
         }
-      }  
+      }
     }
   }
   function unmountedChildren(children: any) {

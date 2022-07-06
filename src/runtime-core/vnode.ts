@@ -3,7 +3,7 @@ import { ShapeFlags } from '../shared/ShapeFlags';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 16:41:46
- * @LastEditTime: 2022-07-02 17:44:37
+ * @LastEditTime: 2022-07-06 10:33:46
  * @LastEditors: wsy
  */
 
@@ -18,6 +18,7 @@ export function createVNode(
     type,
     props,
     children,
+    component: null,
     el: null,
     shapeFlag: getShapeFlag(type),
     key: props?.key,

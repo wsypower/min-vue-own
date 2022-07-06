@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-22 00:22:09
- * @LastEditTime: 2022-06-25 16:32:49
+ * @LastEditTime: 2022-07-06 10:18:33
  * @LastEditors: wsy
  */
 
@@ -12,6 +12,9 @@ const publicPropertiesMap: Record<string, any> = {
   $el: (i: any) => i.vnode.el,
   $slots: (i: any) => {
     return i.slots;
+  },
+  $props: (i: any) => {
+    return i.props;
   },
 };
 export const PublicInstanceProxyHandlers = {
