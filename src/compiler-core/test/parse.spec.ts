@@ -5,7 +5,7 @@ import { NodeTypes } from '../src/ast';
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-07 11:16:52
- * @LastEditTime: 2022-07-07 20:20:59
+ * @LastEditTime: 2022-07-07 21:09:43
  * @LastEditors: wsy
  */
 describe('Parse', () => {
@@ -27,6 +27,16 @@ describe('Element', () => {
     expect(ast.children[0]).toStrictEqual({
       type: NodeTypes.ELEMENT,
       tag: 'div',
+    });
+  });
+});
+
+describe('Text', () => {
+  it('simple Text', () => {
+    const ast = baseParse('some text');
+    expect(ast.children[0]).toStrictEqual({
+      type: NodeTypes.TEXT,
+      content: 'some text',
     });
   });
 });

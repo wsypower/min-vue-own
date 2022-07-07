@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-07 11:26:33
- * @LastEditTime: 2022-07-07 20:54:47
+ * @LastEditTime: 2022-07-07 21:13:47
  * @LastEditors: wsy
  */
 
@@ -27,9 +27,28 @@ function parseChildren(context: any) {
       node = parseElement(context);
     }
   }
+  if (!node) {
+    node = parseText(context);
+  }
   nodes.push(node);
   return nodes;
 }
+function parseText(context: any): any {
+  // 1.获取当前的内容
+  // 2.推进到下一个位置
+  const content = parseTextData(context, context.source.length);
+  return {
+    type: NodeTypes.TEXT,
+    content,
+  };
+}
+
+function parseTextData(context: any, length: number) {
+  const content = context.source.slice(0, length);
+  advanceBy(context, content.length);
+  return content;
+}
+
 function parseElement(context: any) {
   /**
    * 1. 解析tag
@@ -62,7 +81,7 @@ function parseInterpolation(context: any) {
   );
   advanceBy(context, openDelimiter.length);
   const rawContentLength = closeIndex - openDelimiter.length;
-  const rawContent = context.source.slice(0, rawContentLength);
+  const rawContent = parseTextData(context, rawContentLength);
   const content = rawContent.trim();
   advanceBy(context, rawContentLength + closeDelimiter.length);
   return {
