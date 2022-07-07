@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-07 11:26:33
- * @LastEditTime: 2022-07-07 21:13:47
+ * @LastEditTime: 2022-07-07 21:57:58
  * @LastEditors: wsy
  */
 
@@ -17,26 +17,43 @@ export function baseParse(content: string) {
 }
 function parseChildren(context: any) {
   const nodes = [];
-  let node;
-  const s = context.source;
-  if (s.startsWith('{{')) {
-    node = parseInterpolation(context);
-  } else if (s.startsWith('<')) {
-    if (/[a-z]/i.test(s[1])) {
-      console.log('parse element');
-      node = parseElement(context);
+  while (!isEnd(context)) {
+    let node;
+    const s = context.source;
+    if (s.startsWith('{{')) {
+      node = parseInterpolation(context);
+    } else if (s[0] === '<') {
+      if (/[a-z]/i.test(s[1])) {
+        console.log('parse element');
+        node = parseElement(context);
+      }
     }
+    if (!node) {
+      node = parseText(context);
+    }
+    nodes.push(node);
   }
-  if (!node) {
-    node = parseText(context);
-  }
-  nodes.push(node);
+
   return nodes;
+}
+function isEnd(context: any) {
+  // 1. source 有值的时候
+  // 2. 当遇到结束标签的时候
+  if (context.source.startsWith('</div>')) {
+    return true;
+  }
+  return !context.source;
 }
 function parseText(context: any): any {
   // 1.获取当前的内容
   // 2.推进到下一个位置
-  const content = parseTextData(context, context.source.length);
+  let endToken = '{{';
+  let endIndex = context.source.length;
+  const index = context.source.indexOf(endToken);
+  if (index !== -1) {
+    endIndex = index;
+  }
+  const content = parseTextData(context, endIndex);
   return {
     type: NodeTypes.TEXT,
     content,
@@ -54,7 +71,8 @@ function parseElement(context: any) {
    * 1. 解析tag
    * 2. 删除处理完成的代码
    */
-  const element = parseTag(context, TagType.Start);
+  const element: any = parseTag(context, TagType.Start);
+  element.children = parseChildren(context);
   parseTag(context, TagType.End);
   return element;
 }
