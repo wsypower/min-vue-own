@@ -5,7 +5,7 @@ import { NodeTypes } from '../src/ast';
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-07 11:16:52
- * @LastEditTime: 2022-07-08 15:08:52
+ * @LastEditTime: 2022-07-08 19:22:13
  * @LastEditors: wsy
  */
 describe('Parse', () => {
@@ -50,6 +50,37 @@ describe('Parse', () => {
       type: NodeTypes.ELEMENT,
       tag: 'div',
       children: [
+        {
+          type: NodeTypes.TEXT,
+          content: 'hi,',
+        },
+        {
+          type: NodeTypes.INTERPOLATION,
+          content: {
+            type: NodeTypes.SIMPLE_EXPRESSION,
+            content: 'message',
+          },
+        },
+      ],
+    });
+  });
+  test('next element', () => {
+    const ast = baseParse('<div><p>hi</p>hi,{{ message }}</div>');
+    console.log(JSON.stringify(ast.children[0]));
+    expect(ast.children[0]).toStrictEqual({
+      type: NodeTypes.ELEMENT,
+      tag: 'div',
+      children: [
+        {
+          type: NodeTypes.ELEMENT,
+          tag: 'p',
+          children: [
+            {
+              type: NodeTypes.TEXT,
+              content: 'hi',
+            },
+          ],
+        },
         {
           type: NodeTypes.TEXT,
           content: 'hi,',

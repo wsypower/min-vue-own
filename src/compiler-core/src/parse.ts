@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-07 11:26:33
- * @LastEditTime: 2022-07-08 15:06:48
+ * @LastEditTime: 2022-07-08 19:13:33
  * @LastEditors: wsy
  */
 
@@ -13,11 +13,11 @@ const enum TagType {
 }
 export function baseParse(content: string) {
   const context = createParserContext(content);
-  return createRoot(parseChildren(context));
+  return createRoot(parseChildren(context, ''));
 }
-function parseChildren(context: any) {
+function parseChildren(context: any, parentTag: any = '') {
   const nodes = [];
-  while (!isEnd(context)) {
+  while (!isEnd(context, parentTag)) {
     let node;
     const s = context.source;
     if (s.startsWith('{{')) {
@@ -34,11 +34,11 @@ function parseChildren(context: any) {
   }
   return nodes;
 }
-function isEnd(context: any) {
+function isEnd(context: any, parentTag: any) {
   // 1. source 有值的时候
   // 2. 当遇到结束标签的时候
   const s = context.source;
-  if (s.startsWith('</div>')) {
+  if (parentTag && s.startsWith(`</${parentTag}>`)) {
     return true;
   }
   return !s;
@@ -71,7 +71,7 @@ function parseElement(context: any) {
    * 2. 删除处理完成的代码
    */
   const element: any = parseTag(context, TagType.Start);
-  element.children = parseChildren(context);
+  element.children = parseChildren(context, element.tag);
   parseTag(context, TagType.End);
   return element;
 }
