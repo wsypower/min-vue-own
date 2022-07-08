@@ -5,7 +5,7 @@ import { NodeTypes } from '../src/ast';
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-07 11:16:52
- * @LastEditTime: 2022-07-07 21:58:33
+ * @LastEditTime: 2022-07-08 15:08:52
  * @LastEditors: wsy
  */
 describe('Parse', () => {
@@ -28,6 +28,7 @@ describe('Parse', () => {
       expect(ast.children[0]).toStrictEqual({
         type: NodeTypes.ELEMENT,
         tag: 'div',
+        children: [],
       });
     });
   });
@@ -43,7 +44,8 @@ describe('Parse', () => {
   });
 
   test('hello world', () => {
-    const ast = baseParse('<div> hi,{{ message }}</div>');
+    const ast = baseParse('<div>hi,{{ message }}</div>');
+    console.log(JSON.stringify(ast.children[0]));
     expect(ast.children[0]).toStrictEqual({
       type: NodeTypes.ELEMENT,
       tag: 'div',

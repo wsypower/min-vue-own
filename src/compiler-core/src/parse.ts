@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-07 11:26:33
- * @LastEditTime: 2022-07-07 21:57:58
+ * @LastEditTime: 2022-07-08 15:06:48
  * @LastEditors: wsy
  */
 
@@ -24,7 +24,6 @@ function parseChildren(context: any) {
       node = parseInterpolation(context);
     } else if (s[0] === '<') {
       if (/[a-z]/i.test(s[1])) {
-        console.log('parse element');
         node = parseElement(context);
       }
     }
@@ -33,16 +32,16 @@ function parseChildren(context: any) {
     }
     nodes.push(node);
   }
-
   return nodes;
 }
 function isEnd(context: any) {
   // 1. source 有值的时候
   // 2. 当遇到结束标签的时候
-  if (context.source.startsWith('</div>')) {
+  const s = context.source;
+  if (s.startsWith('</div>')) {
     return true;
   }
-  return !context.source;
+  return !s;
 }
 function parseText(context: any): any {
   // 1.获取当前的内容
@@ -101,7 +100,7 @@ function parseInterpolation(context: any) {
   const rawContentLength = closeIndex - openDelimiter.length;
   const rawContent = parseTextData(context, rawContentLength);
   const content = rawContent.trim();
-  advanceBy(context, rawContentLength + closeDelimiter.length);
+  advanceBy(context, closeDelimiter.length);
   return {
     type: NodeTypes.INTERPOLATION,
     content: { type: NodeTypes.SIMPLE_EXPRESSION, content: content },
