@@ -5,7 +5,7 @@ import { NodeTypes } from '../src/ast';
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-07 11:16:52
- * @LastEditTime: 2022-07-08 19:22:13
+ * @LastEditTime: 2022-07-09 01:14:55
  * @LastEditors: wsy
  */
 describe('Parse', () => {
@@ -45,7 +45,6 @@ describe('Parse', () => {
 
   test('hello world', () => {
     const ast = baseParse('<div>hi,{{ message }}</div>');
-    console.log(JSON.stringify(ast.children[0]));
     expect(ast.children[0]).toStrictEqual({
       type: NodeTypes.ELEMENT,
       tag: 'div',
@@ -66,7 +65,6 @@ describe('Parse', () => {
   });
   test('next element', () => {
     const ast = baseParse('<div><p>hi</p>hi,{{ message }}</div>');
-    console.log(JSON.stringify(ast.children[0]));
     expect(ast.children[0]).toStrictEqual({
       type: NodeTypes.ELEMENT,
       tag: 'div',
@@ -94,5 +92,8 @@ describe('Parse', () => {
         },
       ],
     });
+  });
+  test('should throw error when lack end tag', () => {
+    expect(() => baseParse('<div><span></div>')).toThrowError('unclosed tag');
   });
 });
