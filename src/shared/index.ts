@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-14 13:26:28
- * @LastEditTime: 2022-07-03 23:22:56
+ * @LastEditTime: 2022-07-12 21:42:45
  * @LastEditors: wsy
  */
 export const extend = Object.assign;
@@ -17,3 +17,7 @@ export function hasOwn(obj: any, key: string) {
 }
 
 export const EMPTY_PBJ = {};
+
+export function isString(val: any) {
+  return typeof val === 'string';
+}

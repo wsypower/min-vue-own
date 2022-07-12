@@ -1,11 +1,16 @@
-import { helperMapName, TO_DISPLAY_STRING } from './runtimeHelpers';
+import {
+  helperMapName,
+  TO_DISPLAY_STRING,
+  CREATE_ELEMENT_VNODE,
+} from './runtimeHelpers';
 import { NodeTypes } from './ast';
+import { isString } from '../../shared/index';
 
 /*
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-11 00:24:29
- * @LastEditTime: 2022-07-12 13:14:33
+ * @LastEditTime: 2022-07-12 22:20:45
  * @LastEditors: wsy
  */
 export function generate(ast: any) {
@@ -35,18 +40,46 @@ function genNode(node: any, context: any) {
     case NodeTypes.SIMPLE_EXPRESSION:
       genExpression(node, context);
       break;
+    case NodeTypes.ELEMENT:
+      genElement(node, context);
+      break;
+    case NodeTypes.COMPOUND_EXPRESSION:
+      genCompoundExpressions(node, context);
+      break;
     default:
       break;
   }
 }
+
+function genCompoundExpressions(node: any, context: any) {
+  const { push } = context;
+  const { children } = node;
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i];
+    if (isString(child)) {
+      push(child);
+    } else {
+      genNode(child, context);
+    }
+  }
+}
+
+function genElement(node: any, context: any) {
+  const { push, helper } = context;
+  const { tag, children } = node;
+
+  push(`_${helper(CREATE_ELEMENT_VNODE)}("${tag}", null,`);
+  genNode(children, context);
+  push(')');
+}
 function genText(node: any, context: any) {
   const { push } = context;
-  push(`${node.content}`);
+  push(`'${node.content}'`);
 }
 
 function genInterpolation(node: any, context: any) {
   const { push } = context;
-  push(`${context.helper(TO_DISPLAY_STRING)}(`);
+  push(`_${context.helper(TO_DISPLAY_STRING)}(`);
   genNode(node.content, context);
   push(')');
 }

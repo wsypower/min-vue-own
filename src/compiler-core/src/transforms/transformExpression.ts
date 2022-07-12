@@ -1,3 +1,10 @@
+/*
+ * @Description:
+ * @Author: wsy
+ * @Date: 2022-07-12 11:24:30
+ * @LastEditTime: 2022-07-12 20:44:04
+ * @LastEditors: wsy
+ */
 import { NodeTypes } from '../ast';
 
 /*

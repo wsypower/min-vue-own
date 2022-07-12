@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-12 08:13:02
- * @LastEditTime: 2022-07-12 13:05:53
+ * @LastEditTime: 2022-07-12 22:16:12
  * @LastEditors: wsy
  */
 import { NodeTypes } from './ast';
@@ -28,7 +28,7 @@ function traverseNode(node: any, context: any) {
   const nodeTransforms = context.nodeTransforms;
   for (let i = 0; i < nodeTransforms.length; i++) {
     const transform = nodeTransforms[i];
-    transform(node);
+    transform(node, context);
   }
   switch (node.type) {
     case NodeTypes.INTERPOLATION:
@@ -60,5 +60,10 @@ export function transform(root: any, options?: Options) {
 }
 
 function createRootCodegen(root: any) {
-  root.codegenNode = root.children[0];
+  const child = root.children[0];
+  if (child.type === NodeTypes.ELEMENT) {
+    root.codegenNode = child.codegenNode;
+  } else {
+    root.codegenNode = root.children[0];
+  }
 }
