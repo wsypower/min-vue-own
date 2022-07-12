@@ -1,10 +1,11 @@
+import { helperMapName, TO_DISPLAY_STRING } from './runtimeHelpers';
 import { NodeTypes } from './ast';
 
 /*
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-11 00:24:29
- * @LastEditTime: 2022-07-11 02:11:57
+ * @LastEditTime: 2022-07-12 13:14:33
  * @LastEditors: wsy
  */
 export function generate(ast: any) {
@@ -26,13 +27,33 @@ export function generate(ast: any) {
 function genNode(node: any, context: any) {
   switch (node.type) {
     case NodeTypes.TEXT:
-      const { push } = context;
-      push(`${node.content}`);
+      genText(node, context);
       break;
-
+    case NodeTypes.INTERPOLATION:
+      genInterpolation(node, context);
+      break;
+    case NodeTypes.SIMPLE_EXPRESSION:
+      genExpression(node, context);
+      break;
     default:
       break;
   }
+}
+function genText(node: any, context: any) {
+  const { push } = context;
+  push(`${node.content}`);
+}
+
+function genInterpolation(node: any, context: any) {
+  const { push } = context;
+  push(`${context.helper(TO_DISPLAY_STRING)}(`);
+  genNode(node.content, context);
+  push(')');
+}
+
+function genExpression(node: any, context: any) {
+  const { push } = context;
+  push(`${node.content}`);
 }
 
 function createCodegenContext() {
@@ -41,6 +62,9 @@ function createCodegenContext() {
     push(source: string) {
       context.code += source;
     },
+    helper(key: any) {
+      return `${helperMapName[key]}`;
+    },
   };
   return context;
 }
@@ -48,7 +72,12 @@ function createCodegenContext() {
 function genFunctionPreamble(ast: any, context: any): void {
   const { push } = context;
   const VueBindings = `Vue`;
-  const aliasHelper = (s: string) => `${s}:_${s}`;
-  push(`const { ${ast.helpers.map(aliasHelper).join(', ')} } = ${VueBindings}`);
+  const aliasHelper = (s: string) => `${helperMapName[s]}:_${helperMapName[s]}`;
+  if (ast.helpers.length > 0) {
+    push(
+      `const { ${ast.helpers.map(aliasHelper).join(', ')} } = ${VueBindings}`
+    );
+  }
+
   push('\n ');
 }

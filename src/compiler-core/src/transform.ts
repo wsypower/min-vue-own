@@ -1,4 +1,12 @@
+/*
+ * @Description:
+ * @Author: wsy
+ * @Date: 2022-07-12 08:13:02
+ * @LastEditTime: 2022-07-12 13:05:53
+ * @LastEditors: wsy
+ */
 import { NodeTypes } from './ast';
+import { TO_DISPLAY_STRING } from './runtimeHelpers';
 
 interface Options {
   nodeTransforms?: any[];
@@ -22,12 +30,13 @@ function traverseNode(node: any, context: any) {
     const transform = nodeTransforms[i];
     transform(node);
   }
-  transformChildren(node, context);
   switch (node.type) {
     case NodeTypes.INTERPOLATION:
-      context.helper('toDisplayString');
+      context.helper(TO_DISPLAY_STRING);
       break;
-
+    case NodeTypes.ROOT:
+    case NodeTypes.ELEMENT:
+      transformChildren(node, context);
     default:
       break;
   }

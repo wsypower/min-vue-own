@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-07 11:26:33
- * @LastEditTime: 2022-07-09 01:16:14
+ * @LastEditTime: 2022-07-12 12:58:45
  * @LastEditors: wsy
  */
 
@@ -135,12 +135,13 @@ function advanceBy(context: any, length: number) {
 
 function createRoot(children: any) {
   return {
+    type: NodeTypes.ROOT,
     children,
   };
 }
 
 function createParserContext(content: any) {
   return {
-    source: content,
+    source: content,   
   };
 }

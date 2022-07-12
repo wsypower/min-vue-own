@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-07 14:43:30
- * @LastEditTime: 2022-07-07 20:58:02
+ * @LastEditTime: 2022-07-12 12:58:27
  * @LastEditors: wsy
  */
 export const enum NodeTypes {
@@ -10,4 +10,5 @@ export const enum NodeTypes {
   SIMPLE_EXPRESSION,
   ELEMENT,
   TEXT,
+  ROOT,
 }
