@@ -9,7 +9,7 @@ import { transformText } from '../src/transforms/transformText';
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-11 00:21:29
- * @LastEditTime: 2022-07-12 22:27:41
+ * @LastEditTime: 2022-07-13 11:22:28
  * @LastEditors: wsy
  */
 describe('codegen', () => {
@@ -30,7 +30,7 @@ describe('codegen', () => {
   it('element', () => {
     const ast: any = baseParse('<div>hi,{{message}}</div>');
     transform(ast, {
-      nodeTransforms: [transformExpression, transformText, transformElement],
+      nodeTransforms: [transformExpression, transformElement, transformText],
     });
     const { code } = generate(ast);
     expect(code).toMatchSnapshot();

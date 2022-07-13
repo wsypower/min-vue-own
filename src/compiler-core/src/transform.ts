@@ -2,7 +2,7 @@
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-12 08:13:02
- * @LastEditTime: 2022-07-12 22:16:12
+ * @LastEditTime: 2022-07-13 11:14:51
  * @LastEditors: wsy
  */
 import { NodeTypes } from './ast';
@@ -26,9 +26,13 @@ function createTransformsContext(root: any, options?: Options) {
 
 function traverseNode(node: any, context: any) {
   const nodeTransforms = context.nodeTransforms;
+  const exitFns: any = [];
   for (let i = 0; i < nodeTransforms.length; i++) {
     const transform = nodeTransforms[i];
-    transform(node, context);
+    const onExit = transform(node, context);
+    if (onExit) {
+      exitFns.push(onExit);
+    }
   }
   switch (node.type) {
     case NodeTypes.INTERPOLATION:
@@ -39,6 +43,10 @@ function traverseNode(node: any, context: any) {
       transformChildren(node, context);
     default:
       break;
+  }
+  let i = exitFns.length;
+  while (i--) {
+    exitFns[i]();
   }
 }
 

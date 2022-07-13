@@ -10,7 +10,7 @@ import { isString } from '../../shared/index';
  * @Description:
  * @Author: wsy
  * @Date: 2022-07-11 00:24:29
- * @LastEditTime: 2022-07-12 22:20:45
+ * @LastEditTime: 2022-07-13 12:51:25
  * @LastEditors: wsy
  */
 export function generate(ast: any) {
@@ -66,11 +66,30 @@ function genCompoundExpressions(node: any, context: any) {
 
 function genElement(node: any, context: any) {
   const { push, helper } = context;
-  const { tag, children } = node;
+  const { tag, props, children } = node;
 
-  push(`_${helper(CREATE_ELEMENT_VNODE)}("${tag}", null,`);
-  genNode(children, context);
+  push(`_${helper(CREATE_ELEMENT_VNODE)}(`);
+  genNodeList(genNullable([tag, props, children]), context);
   push(')');
+}
+function genNullable(args: any) {
+  return args.map((item: any) => item || 'null');
+}
+
+function genNodeList(nodes: any, context: any) {
+  const { push } = context;
+
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i];
+    if (isString(node)) {
+      push(node);
+    } else {
+      genNode(node, context);
+    }
+    if (i < nodes.length - 1) {
+      push(',');
+    }
+  }
 }
 function genText(node: any, context: any) {
   const { push } = context;
