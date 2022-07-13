@@ -3,12 +3,13 @@ import { ShapeFlags } from '../shared/ShapeFlags';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 16:41:46
- * @LastEditTime: 2022-07-06 10:33:46
+ * @LastEditTime: 2022-07-14 01:34:33
  * @LastEditors: wsy
  */
 
 export const Fragment = Symbol('Fragment');
 export const Text = Symbol('Text');
+
 export function createVNode(
   type: any,
   props?: Record<string, any>,
@@ -46,3 +47,4 @@ function getShapeFlag(type: any) {
 export function createTextVNode(text: any) {
   return createVNode(Text, {}, text);
 }
+export { createVNode as createElementVNode };

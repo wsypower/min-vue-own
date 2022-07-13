@@ -11,7 +11,7 @@ import { queueJobs } from './scheduler';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:13:31
- * @LastEditTime: 2022-07-07 11:16:37
+ * @LastEditTime: 2022-07-14 01:30:18
  * @LastEditors: wsy
  */
 
@@ -110,7 +110,10 @@ export function createRenderer(options: any) {
         if (!instance.isMounted) {
           console.log('init');
           const { proxy } = instance;
-          const subTree = (instance.subTree = instance.render.call(proxy));
+          const subTree = (instance.subTree = instance.render.call(
+            proxy,
+            proxy
+          ));
           patch(null, subTree, container, instance, anchor);
           initialVnode.el = subTree.el;
           instance.isMounted = true;
@@ -122,7 +125,7 @@ export function createRenderer(options: any) {
             updateComponentPreRender(instance, next);
           }
           const { proxy } = instance;
-          const subTree = instance.render.call(proxy);
+          const subTree = instance.render.call(proxy, proxy);
           const preSubTree = instance.subTree;
           instance.subTree = subTree;
           patch(preSubTree, subTree, container, instance, anchor);

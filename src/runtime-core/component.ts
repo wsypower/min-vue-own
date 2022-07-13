@@ -8,10 +8,10 @@ import { proxyRefs } from '../reactivity/ref';
  * @Description:
  * @Author: wsy
  * @Date: 2022-06-19 18:19:56
- * @LastEditTime: 2022-07-06 10:36:49
+ * @LastEditTime: 2022-07-14 01:28:02
  * @LastEditors: wsy
  */
-
+let compiler: any;
 export function createComponentInstance(vnode: any, parent: any) {
   const component = {
     vnode,
@@ -61,6 +61,11 @@ function handleSetupResult(instance: any, setupResult: any) {
 
 function finishComponentSetup(instance: any) {
   const Component = instance.type;
+  if (compiler && !Component.render) {
+    if (Component.template) {
+      Component.render = compiler(Component.template);
+    }
+  }
   instance.render = Component.render;
 }
 
@@ -71,4 +76,8 @@ export function getCurrentInstance() {
 
 export function setCurrentInstance(instance: any) {
   currentInstance = instance;
+}
+
+export function registerRuntimeCompiler(_compiler: any) {
+  compiler = _compiler;
 }
